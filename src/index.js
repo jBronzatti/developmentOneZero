@@ -5,13 +5,18 @@
 //https://github.com/ZijianHe/koa-router
 
 // todas as configuraçoes devem ser passadas via environment variables
-const PORT = process.env.PORT || 3000;
+const dotenv = require('dotenv')
+const sequelize = require('./config/database');
+
+const PORT = dotenv.PORT || 3000;
 
 const Koa = require('koa');
 const Router = require('koa-router');
 
 const koa = new Koa();
 var router = new Router();
+
+sequelize.sync().then(() => console.log("Conectado ao banco de dados!"));
 
 //rota simples pra testar se o servidor está online
 router.get('/', async (ctx) => {
