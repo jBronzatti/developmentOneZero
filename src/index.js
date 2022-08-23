@@ -7,14 +7,18 @@
 // todas as configuraçoes devem ser passadas via environment variables
 const dotenv = require('dotenv')
 const sequelize = require('./config/database');
+const { createUser, getUser, updateUser, getAllUsers, deleteUser } = require('./controllers/userController');
 
 const PORT = dotenv.PORT || 3000;
 
 const Koa = require('koa');
 const Router = require('koa-router');
+const bodyParser = require('koa-bodyparser');
 
 const koa = new Koa();
 var router = new Router();
+
+koa.use(bodyParser());
 
 sequelize.sync().then(() => console.log("Conectado ao banco de dados!"));
 
@@ -23,12 +27,30 @@ router.get('/', async (ctx) => {
   ctx.body = `Seu servidor esta rodando em http://localhost:${PORT}`; //http://localhost:3000/
 });
 
+
+/*
+(async ()=>{
+  const db = require('./config/database');
+  const user = require('./models/userModel');
+  try {
+    const resultado = await db.sync();
+    console.log(resultado);
+  } catch (err) {
+    console.log(err);
+  }
+})();
 //Uma rota de exemplo simples aqui.
 //As rotas devem ficar em arquivos separados, /src/controllers/userController.js por exemplo
 router.get('/users', async (ctx) => {
     ctx.status = 200;
     ctx.body = {total:0, count: 0, rows:[]}
 });
+*/
+router.get('/user', (ctx) => getAllUsers(ctx));
+router.post('/user/create', (ctx) => createUser(ctx));
+router.put('/user/update/:id', (ctx) => updateUser(ctx));
+router.get('/user/:id', (ctx) => getUser(ctx));
+router.delete('/user/remove/:id', (ctx) => deleteUser(ctx));
 
 koa
   .use(router.routes())
