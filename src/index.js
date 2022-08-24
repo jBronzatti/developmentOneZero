@@ -7,7 +7,7 @@
 // todas as configuraçoes devem ser passadas via environment variables
 const dotenv = require('dotenv')
 const sequelize = require('./config/database');
-const { createUser, getUser, updateUser, getAllUsers, deleteUser } = require('./controllers/userController');
+const userRoutes = require('./routes/index.routes');
 
 const PORT = dotenv.PORT || 3000;
 
@@ -23,12 +23,12 @@ koa.use(bodyParser());
 sequelize.sync().then(() => console.log("Conectado ao banco de dados!"));
 
 //rota simples pra testar se o servidor está online
+/*
 router.get('/', async (ctx) => {
   ctx.body = `Seu servidor esta rodando em http://localhost:${PORT}`; //http://localhost:3000/
 });
 
 
-/*
 (async ()=>{
   const db = require('./config/database');
   const user = require('./models/userModel');
@@ -46,15 +46,10 @@ router.get('/users', async (ctx) => {
     ctx.body = {total:0, count: 0, rows:[]}
 });
 */
-router.get('/user', (ctx) => getAllUsers(ctx));
-router.post('/user/create', (ctx) => createUser(ctx));
-router.put('/user/update/:id', (ctx) => updateUser(ctx));
-router.get('/user/:id', (ctx) => getUser(ctx));
-router.delete('/user/remove/:id', (ctx) => deleteUser(ctx));
 
 koa
-  .use(router.routes())
-  .use(router.allowedMethods());
+  .use(userRoutes.routes())
+  .use(userRoutes.allowedMethods());
 
 const server = koa.listen(PORT);
 
