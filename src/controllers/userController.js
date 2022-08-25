@@ -5,7 +5,9 @@ module.exports = {
     async getAllUsers(ctx) {
         try {
             const found = await User.findAll();
-            ctx.body = found;
+            const startAt = 0 || ctx.query.startAt;
+            const limit = 10 || ctx.query.limit;
+            ctx.body = found.skip(startAt).limit(limit).toArray();
             ctx.status = 200;
         } catch (err) {
             console.log(err);
