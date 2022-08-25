@@ -5,6 +5,7 @@
 //https://github.com/ZijianHe/koa-router
 
 // todas as configuraçoes devem ser passadas via environment variables
+
 require('dotenv').config();
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/index.routes');
@@ -12,6 +13,7 @@ const userRoutes = require('./routes/index.routes');
 const PORT = process.env.PORT || 3000;
 
 const Koa = require('koa');
+
 const bodyParser = require('koa-bodyparser');
 
 const koa = new Koa();
@@ -25,18 +27,6 @@ sequelize.sync().then(() => console.log("Conectado ao banco de dados!"));
 router.get('/', async (ctx) => {
   ctx.body = `Seu servidor esta rodando em http://localhost:${PORT}`; //http://localhost:3000/
 });
-
-
-(async ()=>{
-  const db = require('./config/database');
-  const user = require('./models/userModel');
-  try {
-    const resultado = await db.sync();
-    console.log(resultado);
-  } catch (err) {
-    console.log(err);
-  }
-})();
 //Uma rota de exemplo simples aqui.
 //As rotas devem ficar em arquivos separados, /src/controllers/userController.js por exemplo
 router.get('/users', async (ctx) => {
