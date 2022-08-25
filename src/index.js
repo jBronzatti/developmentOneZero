@@ -5,18 +5,16 @@
 //https://github.com/ZijianHe/koa-router
 
 // todas as configuraçoes devem ser passadas via environment variables
-const dotenv = require('dotenv')
+require('dotenv').config();
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/index.routes');
 
-const PORT = dotenv.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 const Koa = require('koa');
-const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 
 const koa = new Koa();
-var router = new Router();
 
 koa.use(bodyParser());
 
