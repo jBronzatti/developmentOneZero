@@ -7,6 +7,12 @@
 node_modules/
 dist/
 
+# Database
+database.sqlite
+
+# Env file
+.env
+
 # Compiled Java class files
 *.class
 
