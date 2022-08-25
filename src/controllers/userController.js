@@ -1,13 +1,14 @@
 const User = require('../models/userModel');
+const { paginate } = require('../pagination/pagination');
 
 module.exports = {
 
     async getAllUsers(ctx) {
         try {
             const found = await User.findAll();
-            const startAt = 0 || ctx.query.startAt;
-            const limit = 10 || ctx.query.limit;
-            ctx.body = found.skip(startAt).limit(limit).toArray();
+            const page = parseInt(ctx.query.page) || 1;
+            const limit = parseInt(ctx.query.limit) || 10;
+            ctx.body = paginate(found, page, limit);
             ctx.status = 200;
         } catch (err) {
             console.log(err);
@@ -16,7 +17,7 @@ module.exports = {
     },
     async getUser(ctx) {
         try {
-            const id = ctx.request.params.id;
+            const id = ctx.params.id;
 
             const user = await User.findOne({ where: { id } });
 
@@ -47,7 +48,7 @@ module.exports = {
     async updateUser(ctx) {
         try {
             const { nome, email, idade } = ctx.request.body;
-            const id = ctx.request.params.id;
+            const id = ctx.params.id;
 
             const user = await User.findOne({ where: { id } });
 
@@ -70,7 +71,7 @@ module.exports = {
 
     async deleteUser(ctx) {
         try {
-            const id = ctx.request.params.id;
+            const id = ctx.params.id;
 
             const user = await User.destroy({ where: { id } });
             if (!user){
@@ -84,5 +85,12 @@ module.exports = {
             ctx.status = 400;
             ctx.body = err;
         }
+    },
+
+    async deleteAll(ctx) {
+        await User.destroy({
+            where: {},
+            truncate: true
+          })
     }
 }
