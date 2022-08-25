@@ -1,8 +1,7 @@
 const { createUser, getUser, updateUser, getAllUsers, deleteUser } = require('../controllers/userController');
-const Koa = require('koa');
+
 const Router = require('koa-router');
 
-const koa = new Koa();
 var router = new Router();
 
 router.get('/user', (ctx) => getAllUsers(ctx));

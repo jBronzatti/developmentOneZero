@@ -20,8 +20,6 @@ const koa = new Koa();
 
 koa.use(bodyParser());
 
-sequelize.sync().then(() => console.log("Conectado ao banco de dados!"));
-
 //rota simples pra testar se o servidor está online
 /*
 router.get('/', async (ctx) => {
