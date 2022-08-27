@@ -5,37 +5,33 @@
 //https://github.com/ZijianHe/koa-router
 
 // todas as configuraçoes devem ser passadas via environment variables
+const Koa = require('koa');
+const userRoutes = require('./routes/index.routes');
+const bodyParser = require('koa-bodyparser');
+const { koaSwagger } = require('koa2-swagger-ui');
+const docsRoutes = require('./routes/docApi');
+
 
 require('dotenv').config();
-const sequelize = require('./config/database');
-const userRoutes = require('./routes/index.routes');
 
 const PORT = process.env.PORT || 3000;
 
-const Koa = require('koa');
-
-const bodyParser = require('koa-bodyparser');
-
 const koa = new Koa();
 
-koa.use(bodyParser());
-
-//rota simples pra testar se o servidor está online
-/*
-router.get('/', async (ctx) => {
-  ctx.body = `Seu servidor esta rodando em http://localhost:${PORT}`; //http://localhost:3000/
-});
-//Uma rota de exemplo simples aqui.
-//As rotas devem ficar em arquivos separados, /src/controllers/userController.js por exemplo
-router.get('/users', async (ctx) => {
-    ctx.status = 200;
-    ctx.body = {total:0, count: 0, rows:[]}
-});
-*/
 
 koa
+  .use(bodyParser())
   .use(userRoutes.routes())
-  .use(userRoutes.allowedMethods());
+  .use(docsRoutes.routes())
+  .use(userRoutes.allowedMethods())
+  .use(
+    koaSwagger({
+      routePrefix: '/docs', // host at /docs
+      swaggerOptions: {
+        url: `http://localhost:${PORT}/json`, // example path to json
+      },
+    }),
+  );
 
 const server = koa.listen(PORT);
 
